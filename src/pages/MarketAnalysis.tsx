@@ -88,8 +88,11 @@ export function MarketAnalysis({ onNavigate }: MarketAnalysisProps) {
                 : availableYears.length > 0
                   ? [availableYears[availableYears.length - 1]]
                   : []
-          const defaultCountries = availableCountries.length >= 2 && availableCountries.includes('USA') && availableCountries.includes('Canada')
-            ? ['USA', 'Canada']
+          // Default to U.S. and Canada if available
+          const usCountry = availableCountries.find(c => c === 'U.S.' || c === 'US' || c === 'USA')
+          const canadaCountry = availableCountries.find(c => c === 'Canada')
+          const defaultCountries = usCountry && canadaCountry
+            ? [usCountry, canadaCountry]
             : availableCountries.length >= 2
               ? availableCountries.slice(0, 2)
               : availableCountries.length === 1
@@ -847,9 +850,9 @@ export function MarketAnalysis({ onNavigate }: MarketAnalysisProps) {
       
       // Use default values if no data
       const defaultValues: Record<string, { cagr: number; share: number; opp: number }> = {
-        'APAC': { cagr: 8.5, share: 9.2, opp: 12500 },
         'Asia Pacific': { cagr: 8.5, share: 9.2, opp: 12500 },
         'Europe': { cagr: 5.2, share: 6.8, opp: 6800 },
+        'Rest of Europe': { cagr: 4.8, share: 5.5, opp: 5500 },
         'North America': { cagr: 5.8, share: 7.1, opp: 7200 },
         'Middle East': { cagr: 6.5, share: 3.2, opp: 1200 },
         'Latin America': { cagr: 4.2, share: 2.8, opp: 800 },
@@ -858,8 +861,8 @@ export function MarketAnalysis({ onNavigate }: MarketAnalysisProps) {
       
       const defaults = defaultValues[region] || { cagr: 5.0, share: 5.0, opp: 5000 }
       
-      // Map region names to match screenshot
-      const regionDisplayName = region === 'APAC' ? 'Asia Pacific' : region
+      // Use region name as display name
+      const regionDisplayName = region
       
       return {
         region: regionDisplayName,
@@ -1197,7 +1200,7 @@ export function MarketAnalysis({ onNavigate }: MarketAnalysisProps) {
                     : 'text-text-secondary-light dark:text-text-secondary-dark hover:text-electric-blue dark:hover:text-cyan-accent'
                 }`}
               >
-                YoY / CAGR Analysis
+                Y-o-Y / CAGR Analysis
                 {activeTab === 'yoy' && (
                   <div className={`absolute bottom-0 left-0 right-0 h-0.5 ${isDark ? 'bg-cyan-accent' : 'bg-electric-blue'}`}></div>
                 )}
@@ -1880,14 +1883,14 @@ export function MarketAnalysis({ onNavigate }: MarketAnalysisProps) {
                 <div className="mb-8">
                   <div className="flex items-center gap-3 mb-3">
                     <div className={`w-1 h-10 rounded-full ${isDark ? 'bg-cyan-accent' : 'bg-electric-blue'}`}></div>
-                    <InfoTooltip content="• Shows Year-over-Year (YoY) growth rate and Compound Annual Growth Rate (CAGR)\n• Toggle between YoY and CAGR views using the button\n• YoY shows year-to-year growth percentage\n• CAGR shows cumulative annual growth rate from the first year\n• Select regions or countries to generate separate charts for each (no summation)\n• Use filters to analyze specific regions, product types, or countries">
+                    <InfoTooltip content="• Shows Year-over-Year (Y-o-Y) growth rate and Compound Annual Growth Rate (CAGR)\n• Toggle between Y-o-Y and CAGR views using the button\n• Y-o-Y shows year-to-year growth percentage\n• CAGR shows cumulative annual growth rate from the first year\n• Select regions or countries to generate separate charts for each (no summation)\n• Use filters to analyze specific regions, product types, or countries">
                       <h2 className="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark cursor-help">
-                        Year-over-Year (YoY) & CAGR Analysis
+                        Year-over-Year (Y-o-Y) & CAGR Analysis
                       </h2>
                     </InfoTooltip>
                   </div>
                   <p className="text-base text-text-secondary-light dark:text-text-secondary-dark ml-4 mb-2">
-                    Growth rate analysis with toggle between YoY and CAGR metrics. Separate charts for each selected country/region.
+                    Growth rate analysis with toggle between Y-o-Y and CAGR metrics. Separate charts for each selected country/region.
                   </p>
                 </div>
                 
@@ -1908,7 +1911,7 @@ export function MarketAnalysis({ onNavigate }: MarketAnalysisProps) {
                             {entity.label}
                           </h3>
                           <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                            Toggle between YoY and CAGR views
+                            Toggle between Y-o-Y and CAGR views
                           </p>
                         </div>
                         <div className="flex-1 flex items-center justify-center min-h-0 pt-2">
